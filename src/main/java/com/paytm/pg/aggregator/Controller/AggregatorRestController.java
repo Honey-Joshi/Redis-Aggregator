@@ -31,7 +31,80 @@ public class AggregatorRestController {
     {
 
         // Sending the message
-        JSONObject j = new JSONObject("{\"Primary_Key\":\"101_ec2\",\"Instant\":{\"commision_tax\":1555.2,\"pc_fees\":4320,\"pc_tax\":734.4,\"total_count\":864,\"total_amount\":32400,\"commision\":17280},\"Acquiring\":{\"commision_tax\":1555.2,\"pc_fees\":4320,\"pc_tax\":734.4,\"total_count\":864,\"total_amount\":32400,\"commision\":17280},\"Refund\":{\"commision_tax\":1555.2,\"pc_fees\":4320,\"pc_tax\":734.4,\"total_count\":864,\"total_amount\":32400,\"commision\":17280}}");
+        JSONObject j = new JSONObject(new String("{\n" +
+                "\t\"orderType\": \"ACQUIRING\",\n" +
+                "\t\"totalCount\": \"4\",\n" +
+                "\t\"totalAmount\": {\n" +
+                "\t\t\"currency\": \"INR\",\n" +
+                "\t\t\"value\": \"188500\"\n" +
+                "\t},\n" +
+                "\t\"totalCommission\": {\n" +
+                "\t\t\"currency\": \"INR\",\n" +
+                "\t\t\"value\": \"0\"\n" +
+                "\t},\n" +
+                "\t\"totalCommissionTax\": {\n" +
+                "\t\t\"currency\": \"INR\",\n" +
+                "\t\t\"value\": \"0\"\n" +
+                "\t},\n" +
+                "\t\"totalPcFee\": {\n" +
+                "\t\t\"currency\": \"INR\",\n" +
+                "\t\t\"value\": \"0\"\n" +
+                "\t},\n" +
+                "\t\"totalPcTax\": {\n" +
+                "\t\t\"currency\": \"INR\",\n" +
+                "\t\t\"value\": \"0\"\n" +
+                "\t},\n" +
+                "\t\"subOrderWiseBreakup\": [\n" +
+                "\t\t{\n" +
+                "\t\t\t\"subOrderType\": \"INSTANT_SETTLEMENT\",\n" +
+                "\t\t\t\"totalCount\": \"3\",\n" +
+                "\t\t\t\"totalAmount\": {\n" +
+                "\t\t\t\t\"currency\": \"INR\",\n" +
+                "\t\t\t\t\"value\": \"179000\"\n" +
+                "\t\t\t},\n" +
+                "\t\t\t\"totalCommission\": {\n" +
+                "\t\t\t\t\"currency\": \"INR\",\n" +
+                "\t\t\t\t\"value\": \"0\"\n" +
+                "\t\t\t},\n" +
+                "\t\t\t\"totalCommissionTax\": {\n" +
+                "\t\t\t\t\"currency\": \"INR\",\n" +
+                "\t\t\t\t\"value\": \"0\"\n" +
+                "\t\t\t},\n" +
+                "\t\t\t\"totalPcFee\": {\n" +
+                "\t\t\t\t\"currency\": \"INR\",\n" +
+                "\t\t\t\t\"value\": \"0\"\n" +
+                "\t\t\t},\n" +
+                "\t\t\t\"totalPcTax\": {\n" +
+                "\t\t\t\t\"currency\": \"INR\",\n" +
+                "\t\t\t\t\"value\": \"0\"\n" +
+                "\t\t\t}\n" +
+                "\t\t},\n" +
+                "\t\t{\n" +
+                "\t\t\t\"subOrderType\": \"EMPTY\",\n" +
+                "\t\t\t\"totalCount\": \"1\",\n" +
+                "\t\t\t\"totalAmount\": {\n" +
+                "\t\t\t\t\"currency\": \"INR\",\n" +
+                "\t\t\t\t\"value\": \"9500\"\n" +
+                "\t\t\t},\n" +
+                "\t\t\t\"totalCommission\": {\n" +
+                "\t\t\t\t\"currency\": \"INR\",\n" +
+                "\t\t\t\t\"value\": \"0\"\n" +
+                "\t\t\t},\n" +
+                "\t\t\t\"totalCommissionTax\": {\n" +
+                "\t\t\t\t\"currency\": \"INR\",\n" +
+                "\t\t\t\t\"value\": \"0\"\n" +
+                "\t\t\t},\n" +
+                "\t\t\t\"totalPcFee\": {\n" +
+                "\t\t\t\t\"currency\": \"INR\",\n" +
+                "\t\t\t\t\"value\": \"0\"\n" +
+                "\t\t\t},\n" +
+                "\t\t\t\"totalPcTax\": {\n" +
+                "\t\t\t\t\"currency\": \"INR\",\n" +
+                "\t\t\t\t\"value\": \"0\"\n" +
+                "\t\t\t}\n" +
+                "\t\t}\n" +
+                "\t]\n" +
+                "}"));
         j.put("Primary_Key", random(2));
         log.info(j.toString());
         kafkaTemplate.send(TOPIC,UUID.randomUUID().toString(), j.toString());
