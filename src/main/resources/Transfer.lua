@@ -7,19 +7,17 @@ local function logit(msg)
     logtable[#logtable+1] = msg
 end
 
-local function isNumeric(value)
-    --logit("comparing " .. value .."with " ..tostring(tonumber(value)))
-    if value == tostring(tonumber(value)) then
-        --logit("inside true column with value -> " .. value)
-        return true
-    end
+local function isInteger(str)
+
+    return not (str == "" or str:find("%D"))  -- str:match("%D") also works
+
 end
 
 
 local function sumIt(redisJson,newJson)
     for i in pairs(redisJson) do
         --logit("Type of value is -> "..tostring(isNumeric(redisJson[i])).." and value is ->" ..redisJson[i])
-        if isNumeric(redisJson[i]) then
+        if isInteger(tostring(redisJson[i])) then
             redisJson[i] = redisJson[i]+ newJson[i];
             logit("The Json aggregated in the loop successfully")
         end
