@@ -19,7 +19,7 @@ local function sumIt(redisJson,newJson)
         --logit("Type of value is -> "..tostring(isNumeric(redisJson[i])).." and value is ->" ..redisJson[i])
         if isInteger(tostring(redisJson[i])) then
             redisJson[i] = redisJson[i]+ newJson[i];
-            logit("The Json aggregated in the loop successfully")
+            --logit("The Json aggregated in the loop successfully")
         end
     end
     return redisJson;
@@ -36,7 +36,6 @@ if e == 1 then
     local currentJson = cjson.decode(redis.pcall('HGET',key1, key1))
     val = cjson.decode(val)
 
-    logit("line before function call "..tostring(val))
         currentJson = sumIt(currentJson,val);
         redis.pcall('HSET',key1,key1,cjson.encode(currentJson))
         redis.pcall('HSET',key1,key2,tostring(1))

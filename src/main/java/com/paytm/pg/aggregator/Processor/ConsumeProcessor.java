@@ -69,7 +69,7 @@ public class ConsumeProcessor {
             {
                 rec(obj.getJSONObject(s),hm,s);
             }
-            else if (s.equals("subOrderWiseBreakup"))
+            else if (isJSONArray(pre))
             {
                 JSONArray arr = obj.getJSONArray(s);
                 int len = arr.length();
@@ -85,8 +85,8 @@ public class ConsumeProcessor {
             }
             else
             {
-                if(prev.length() !=0)
-                    prev.concat("_");
+
+                prev.concat("_");
                 hm.put(prev.concat(s.toString()),obj.get(s).toString());
             }
         }
@@ -105,6 +105,15 @@ public class ConsumeProcessor {
             pp.put(newS,newVal);
         }
         return pp;
+    }
+
+    public boolean isJSONArray(String input) {
+        try {
+            new JSONArray(input);
+            return true;
+        } catch (JSONException ex) {
+            return false;
+        }
     }
 
 }
