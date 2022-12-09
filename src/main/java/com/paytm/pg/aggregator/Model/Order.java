@@ -1,40 +1,30 @@
 package com.paytm.pg.aggregator.Model;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import lombok.Builder;
+import lombok.Data;
+import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.Date;
 
-@AllArgsConstructor
-@NoArgsConstructor
+//@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonInclude(JsonInclude.Include.NON_NULL)
+@Data
+@ToString
+@Builder
 public class Order {
-
-    Date gmtCreate;
-    Date gmtModified;
-    String ip_role_id;
-    String bizId;
-    String ip_role_type;
-    String entity_type;
-    String entity_sub_type;
-    String state;
-    long total_count;
-    long total_amount;
-    String total_amount_currency;
-    long total_commission;
-    String total_commission_currency;
-    long total_commission_tax;
-    String total_commission_tax_currency;
-    long total_pc_fee;
-    String total_pc_fee_currency;
-    int total_pc_tax;
-    String total_pc_tax_currency;
-    String extend_info;
-    long calculated_on_date;
-    Date start_date;
-    Date end_date;
-    String time_unit;
-    long dt;
-    String pay_method;
-    Date partition_date;
-
+    String orderType;
+    private String bizOrderId;
+    private String ipRoleId;
+    private String payMethod;
+    SubOrderType subOrderTyp;
+//    private CurrencyAmount totalAmount;
+//    private CurrencyAmount totalPcfFee;
+//    private CurrencyAmount totalPcfFeeTax;
+//    private CurrencyAmount totalMdrFee;
+//    private CurrencyAmount totalMdrFeeTax;
 }

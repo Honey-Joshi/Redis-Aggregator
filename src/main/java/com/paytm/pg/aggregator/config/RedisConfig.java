@@ -38,19 +38,19 @@ public class RedisConfig {
     public LettuceConnectionFactory redisClusterConnectionFactory() {
 
         RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration();
-        redisClusterConfiguration.clusterNode("10.211.123.4",7000);
-        RedisNode r1 = new RedisClusterNode("10.211.126.79",7000);
-        RedisNode r2 = new RedisClusterNode("10.211.126.79",7001);
-        RedisNode r3 = new RedisClusterNode("10.211.125.160",7001);
-        RedisNode r4 = new RedisClusterNode("10.211.125.160",7000);
-        RedisNode r5 = new RedisClusterNode("10.211.123.4",7001);
-        redisClusterConfiguration.addClusterNode(r2);
+        redisClusterConfiguration.clusterNode("172.18.0.4",6379);
+        RedisNode r1 = new RedisClusterNode("172.18.0.5",6379);
+//        RedisNode r2 = new RedisClusterNode("10.211.126.79",7001);
+//        RedisNode r3 = new RedisClusterNode("10.211.125.160",7001);
+//        RedisNode r4 = new RedisClusterNode("10.211.125.160",7000);
+//        RedisNode r5 = new RedisClusterNode("10.211.123.4",7001);
+//        redisClusterConfiguration.addClusterNode(r2);
         redisClusterConfiguration.addClusterNode(r1);
-        redisClusterConfiguration.addClusterNode(r3);
-        redisClusterConfiguration.addClusterNode(r4);
-        redisClusterConfiguration.addClusterNode(r5);
-        redisClusterConfiguration.setMaxRedirects(100);
-//        redisClusterConfiguration.setPassword("bitnami");
+//        redisClusterConfiguration.addClusterNode(r3);
+//        redisClusterConfiguration.addClusterNode(r4);
+//        redisClusterConfiguration.addClusterNode(r5);
+        redisClusterConfiguration.setMaxRedirects(5);
+        redisClusterConfiguration.setPassword("bitnami");
         // Support adaptive cluster topology refresh and static refresh source
         //In case a master node failure this configuration manage the whole topology for otherher nodes.
         ClusterTopologyRefreshOptions clusterTopologyRefreshOptions =  ClusterTopologyRefreshOptions.builder()

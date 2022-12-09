@@ -1,21 +1,32 @@
 package com.paytm.pg.aggregator.Processor;
 
+import com.fasterxml.jackson.core.JsonFactoryBuilder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.google.gson.Gson;
+import com.paytm.pg.aggregator.Model.Order;
+import com.paytm.pg.aggregator.Model.RealtimeAggregateBaseDTO;
+import com.paytm.pg.aggregator.Model.SubOrderType;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.json.ParseException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.json.JSONException;
+import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.util.StopWatch;
 
+import java.lang.reflect.Array;
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Configuration
 @Slf4j
@@ -25,21 +36,43 @@ public class ConsumeProcessor {
     RedisTemplate redisTemplate;
     @Autowired
     RedisScript redisScript;
-    public void saveDto(String message, String key) throws ParseException, JSONException {
+    public void saveDto(String message, String key) throws ParseException, JSONException, JsonProcessingException {
 
             Object k;
             String k_key="";
         StopWatch st = new StopWatch("abcd");
         st.start();
             JSONObject jsonObject = new JSONObject(message);
-            String uk = jsonObject.getString("Primary_Key");
-            HashMap<String,String> hm = new HashMap<>();
-            hm = rec(jsonObject,hm,"");
-            log.info("Size of hashmap is -> {}",hm.size());
+        JSONObject jsonObject2 = new JSONObject();
 
-            JSONObject finalObj = new JSONObject(hm);
+        jsonObject2.put("totalAmount",0);
+        jsonObject2.put("totalPcfFee",0);
+        jsonObject2.put("totalMdrFee",0);
+        jsonObject2.put("totalMdrFeeTax",0);
 
-            String s = redisTemplate.execute(redisScript, List.of(uk),finalObj.toString(),key).toString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS,true);
+        log.info(jsonObject.toString());
+
+        RealtimeAggregateBaseDTO thisOrder = objectMapper.readValue(message, RealtimeAggregateBaseDTO.class);
+        SubOrderType sot = objectMapper.readValue(message, SubOrderType.class);
+        log.info("SOT obj -> {}",sot);
+        log.info("DTO obj -> {}",thisOrder);
+        Order fOrder = Order.builder().
+                        bizOrderId(thisOrder.getBizOrderId())
+                                .orderType(thisOrder.getOrderType())
+                                        .ipRoleId(thisOrder.getIpRoleId())
+                                                .payMethod(thisOrder.getPayMethod())
+                                                        .subOrderTyp(sot).
+                build();
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String json = ow.writeValueAsString(fOrder);
+        log.info("print my obj -> {}",json);
+//        log.info("this is object data {} {} {} {} {}",thisOrder.getBizOrderId(),thisOrder.getOrderCreatedTime(),thisOrder.getDtoType(),thisOrder.getOrderStatus(),thisOrder.getOrderAmount().getAmount());
+
+//            log.info("hello this is jsonObj -> {}",thisOrder);
+            String s = redisTemplate.execute(redisScript, List.of(thisOrder.getBizOrderId()),json ,thisOrder.getOrderType()+"_"+thisOrder.getSubOrderType(),key,jsonObject2.toString()).toString();
             log.info(" LUA Response-> "+s);
 
             st.stop();
@@ -48,6 +81,7 @@ public class ConsumeProcessor {
             log.info("Total time taken in nanoSeconds -> "+st.getTotalTimeNanos());
 
     }
+
 
     public boolean isValid(String json) {
         try {

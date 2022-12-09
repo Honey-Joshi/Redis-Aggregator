@@ -1,5 +1,6 @@
 package com.paytm.pg.aggregator.config;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.paytm.pg.aggregator.Processor.ConsumeProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.json.ParseException;
@@ -22,7 +23,7 @@ public class Kafka {
 
     @KafkaListener(topics = "test", groupId = "Default_Consunmer")
     public void listen(String message,
-                       @Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key) throws ParseException, JSONException {
+                       @Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key) throws ParseException, JSONException, JsonProcessingException {
 //        log.info(message);
 //        log.info("Kafka key is -> "+key);
         consumeProcessor.saveDto(message,key);
