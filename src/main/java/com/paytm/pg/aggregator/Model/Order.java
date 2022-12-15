@@ -21,10 +21,10 @@ public class Order {
     private String bizOrderId;
     private String ipRoleId;
     private String payMethod;
-    SubOrderType subOrderTyp;
-//    private CurrencyAmount totalAmount;
-//    private CurrencyAmount totalPcfFee;
-//    private CurrencyAmount totalPcfFeeTax;
-//    private CurrencyAmount totalMdrFee;
-//    private CurrencyAmount totalMdrFeeTax;
+    SubOrderType subOrderWiseBreakup[];
+    private CurrencyAmount totalAmount;
+    private CurrencyAmount totalPcfFee;
+    private CurrencyAmount totalPcfFeeTax;
+    private CurrencyAmount totalMdrFee;
+    private CurrencyAmount totalMdrFeeTax;
 }
